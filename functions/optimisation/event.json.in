@@ -15,8 +15,8 @@
           "size": 3292
         },
         "bucket": {
-          "arn": "arn:aws:s3:::dummy-lambda-test",
-          "name": "dummy-lambda-test",
+          "arn": "arn:aws:s3:::${bucket_name}",
+          "name": "${bucket_name}",
           "ownerIdentity": {
             "principalId": "EXAMPLE"
           }
