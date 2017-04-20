@@ -1,0 +1,11 @@
+{
+     "name": "optimisation",
+    "description": "Image optisation function",
+    "runtime": "python",
+    "memory": 128,
+    "timeout": 15,
+    "role": "${lambda_execution_role_arn}",
+    "hooks":{
+            "build": "pip install -r requirements.txt -t ."
+    }
+}

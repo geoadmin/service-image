@@ -1,0 +1,13 @@
+{
+    "name": "image",
+    "description": "Image optisation function",
+    "runtime": "python",
+    "memory": 128,
+    "timeout": 15,
+    "role": "${lambda_execution_role_arn}",
+    "vpc" :
+      { "securityGroups": [${securitygroup_ids}],
+         "subnets": [${subnet_ids}]
+    }
+    
+}
