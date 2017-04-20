@@ -9,22 +9,23 @@ import argparse
 try:
     import boto3
 except ImportError:
-   print('Please install boto3 to use this tool')
-   sys.exit(1)
+    print('Please install boto3 to use this tool')
+    sys.exit(1)
 
-profile_name=os.environ.get('profile_name')
+profile_name = os.environ.get('profile_name')
 boto3.setup_default_session(profile_name=profile_name, region_name='eu-west-1')
+
 
 def main(bucket, lambdas, events):
 
     data = {}
     data['LambdaFunctionConfigurations'] = [
-                {
-                    'LambdaFunctionArn': _lambda,
-                    'Events': events
-                }
-                for _lambda in lambdas if _lambda
-            ]
+        {
+            'LambdaFunctionArn': _lambda,
+            'Events': events
+        }
+        for _lambda in lambdas if _lambda
+    ]
     print(data)
     s3 = boto3.resource('s3')
     bucket_notification = s3.BucketNotification(bucket)

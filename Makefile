@@ -47,6 +47,10 @@ templates: $(JSON_FILES)
 put_bucket_notification:
 	python ./put-s3-bucket-notification.py --bucket $(bucket_name) --lambda $(lambda_function_arn) 
 
+.PHONY:invoke
+invoke: 
+	python ./invoke-lambda-function.py --profile $(profile_name) image_optimisation functions/optimisation/event.json
+
 %.json: %.json.in
 	source config && \
 	envsubst < $<  > $@
@@ -55,6 +59,7 @@ put_bucket_notification:
 .PHONY: deploy
 deploy:
 	$(APEX_CMD) deploy optimisation 
+
 
 .PHONY: test
 test:
