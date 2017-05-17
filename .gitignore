@@ -2,5 +2,6 @@
 bin/apex
 project.json
 functions/optimisation/project.json
+functions/optimisation/event.json
 functions/optimisation/requests*
 

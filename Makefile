@@ -38,17 +38,28 @@ help:
 	@echo "- cleanall           Remove generated files and py deps"
 
 .PHONY: all
-all: templates 
+all: templates
 	curl https://raw.githubusercontent.com/apex/apex/master/install.sh | DEST=$(APEX_CMD) sh
 
 templates: $(JSON_FILES)
 
+.PHONY: put_bucket_notification
+put_bucket_notification:
+	python ./put-s3-bucket-notification.py --bucket $(bucket_name) --lambda $(lambda_function_arn) 
 
+.PHONY:invoke
+invoke: 
+	python ./invoke-lambda-function.py --profile $(profile_name) image_optimisation functions/optimisation/event.json
 
 %.json: %.json.in
 	source config && \
 	envsubst < $<  > $@
 	echo "$<" to "$@"
+
+.PHONY: deploy
+deploy:
+	$(APEX_CMD) deploy optimisation 
+
 
 .PHONY: test
 test:
