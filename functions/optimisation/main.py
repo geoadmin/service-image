@@ -90,7 +90,7 @@ def handle(event, context):
                                                          (optimized / float(original)) * 100.0),
                     "optimized": "True"}
 
-        s3.upload_file(out, target, key, ExtraArgs={"Metadata": metadata, 'ContentType': "image/{}".format(extension)})
+        s3.upload_file(out, bucket, key, ExtraArgs={"Metadata": metadata, 'ContentType': "image/{}".format(extension)})
 
         return {'Content-Type': response['ContentType'],
                 'Key': key,
