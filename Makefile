@@ -7,6 +7,7 @@ NOSE_CMD := $(INSTALL_DIRECTORY)/bin/nosetests
 FLAKE8_CMD := $(INSTALL_DIRECTORY)/bin/flake8
 AUTOPEP8_CMD := $(INSTALL_DIRECTORY)/bin/autopep8
 PYTHON_FILES := $(shell find functions -path .venv -prune -o  -path build -prune -o -type f -name "*.py" -print)
+CONFIG ?= config
 
 # Linting rules
 PEP8_IGNORE := "E128,E221,E241,E251,E265,E266,E272,E402,E501,E711"
@@ -31,11 +32,17 @@ help:
 	@echo
 	@echo "Possible targets:"
 	@echo "- all                Build the app"
+	@echo "- deploy             Deploy de application"
 	@echo "- test               Launch the tests"
-	@echo "- autolint			Run the autolinter."
+	@echo "- autolint		      	Run the autolinter."
 	@echo "- lint               Run the linter."
 	@echo "- clean              Remove generated files"
 	@echo "- cleanall           Remove generated files and py deps"
+	@echo
+	@echo "Variables:"
+	@echo "CONFIG               $(CONFIG)"
+	@echo "PROFILE              $(PROFILE)"
+	@echo "bucket_name          $(bucket_name)"
 
 .PHONY: all
 all: templates
@@ -52,13 +59,19 @@ invoke:
 	python ./invoke-lambda-function.py --profile $(profile_name) image_optimisation functions/optimisation/event.json
 
 %.json: %.json.in
-	source config && \
+	source $(CONFIG) && \
 	envsubst < $<  > $@
 	echo "$<" to "$@"
 
 .PHONY: deploy
-deploy:
-	$(APEX_CMD) deploy optimisation 
+deploy: check-profile
+	$(APEX_CMD) deploy --profile $(PROFILE) optimisation 
+
+.PHONY: check-profile
+check-profile:
+ifndef PROFILE
+		$(error PROFILE is undefined)
+endif
 
 
 .PHONY: test
