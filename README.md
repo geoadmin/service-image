@@ -9,6 +9,13 @@ AWS Lambda function to optimise small OGC WMTS tiles (png and jpeg) in agiven AW
 The management of the AWS Lambda function is done with [apex](https://github.com/apex/apex).
 Please read [apex.run](http://apex.run/) for background infos on this utility.
 
+Install `apex` in your ${HOME}/bin
+
+  $  curl https://raw.githubusercontent.com/apex/apex/master/install.sh | DEST=${HOME}/bin/apex  sh
+
+  $ which apex
+  /home/ltmom/bin/apex
+
 Initialise environmetal variables for you project/AWS account:
 
   $ source config
