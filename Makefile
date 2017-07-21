@@ -32,7 +32,7 @@ help:
 	@echo
 	@echo "Possible targets:"
 	@echo "- all                Build the app"
-	@echo "- deploy             Deploy de application"
+	@echo "- deploy             Deploy application"
 	@echo "- test               Launch the tests"
 	@echo "- autolint		      	Run the autolinter."
 	@echo "- lint               Run the linter."
@@ -54,6 +54,14 @@ templates: $(JSON_FILES)
 put_bucket_notification:
 	python ./put-s3-bucket-notification.py --bucket $(bucket_name) --lambda $(lambda_function_arn) 
 
+.PHONY: create_policy
+create_policy:
+	aws iam create-policy --profile $(profile_name) --policy-name $(lambda_execution_policy) --policy-document file://service-image_lambda_execution
+
+.PHONY: create-role
+create-role:
+	aws iam create-role --profile $(profile_name) --role-name $(lambda_execution_role)  --assume-role-policy-document file://Test-Role-Trust-Policy.json
+
 .PHONY:invoke
 invoke: 
 	python ./invoke-lambda-function.py --profile $(profile_name) image_optimisation functions/optimisation/event.json
@@ -64,8 +72,8 @@ invoke:
 	echo "$<" to "$@"
 
 .PHONY: deploy
-deploy: check-profile
-	$(APEX_CMD) deploy --profile $(PROFILE) optimisation 
+deploydev: check-profile templates
+	$(APEX_CMD) deploy --profile $(PROFILE) --alias service-image-dev   optimisation 
 
 .PHONY: check-profile
 check-profile:

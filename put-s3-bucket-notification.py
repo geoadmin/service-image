@@ -26,9 +26,23 @@ def main(bucket, lambdas, events):
         }
         for _lambda in lambdas if _lambda
     ]
-    print(data)
+    #print(data)
     s3 = boto3.resource('s3')
     bucket_notification = s3.BucketNotification(bucket)
+
+    bucket_notification.load()
+
+    configs = bucket_notification.lambda_function_configurations
+    if configs is not None:
+        print("The following notification(s) already exist(s) on this bucket")
+        for config in configs:
+            print(config)
+        sys.exit()
+    else:
+        print("No notification on this bucket. Creating one.")
+        print(data)
+
+
     try:
         response = bucket_notification.put(NotificationConfiguration=data)
         print('Bucket notification updated successfully')
